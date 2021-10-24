@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: server
+    depends_on:
+      - postgres_db
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - ./server:/app
+    networks:
+      - default
+  postgres_db:
+    container_name: postgres_db
+    image: postgres:13.0
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgres/data
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+    ports:
+      - 5432:5432
+    networks:
+      - default
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
+    external: false
